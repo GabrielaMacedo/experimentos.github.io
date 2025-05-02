@@ -1,0 +1,1437 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.28">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>4&nbsp; 📈 Mensurando os resultados – Mensuração de Teste A/B - Um exemplo prático para campanhas de marketing e pricing</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./05_DiversosGrupos.html" rel="next">
+<link href="./03_TamanhoAmostra.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-b719d3d4935f2b08311a76135e2bf442.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-364982630eef5352dd1537128a8ed5cb.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<!-- Google tag (gtag.js) -->
+
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-1YH5B9QJLK"></script>
+
+<script>
+
+  window.dataLayer = window.dataLayer || [];
+
+  function gtag(){dataLayer.push(arguments);}
+
+  gtag('js', new Date());
+
+
+
+  gtag('config', 'G-1YH5B9QJLK');
+
+</script>
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./04_MensuracaoAB.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">📈 Mensurando os resultados</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Mensuração de Teste A/B - Um exemplo prático para campanhas de marketing e pricing</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/GabrielaMacedo/experimentos.github.io" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <div class="dropdown">
+      <a href="" title="Download" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Download"><i class="bi bi-download"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="./Mensuração-de-Teste-A-B---Um-exemplo-prático-para-campanhas-de-marketing-e-pricing.pdf">
+              <i class="bi bi-file-pdf pe-1"></i>
+            Download PDF
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="./Mensuração-de-Teste-A-B---Um-exemplo-prático-para-campanhas-de-marketing-e-pricing.epub">
+              <i class="bi bi-journal pe-1"></i>
+            Download ePub
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="./Mensuração-de-Teste-A-B---Um-exemplo-prático-para-campanhas-de-marketing-e-pricing.docx">
+              <i class="bi bi-file-word pe-1"></i>
+            Download Docx
+            </a>
+          </li>
+      </ul>
+    </div>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">📊 Objetivo do projeto</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">📁 Estrutura do Estudo</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03_TamanhoAmostra.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">🧾 Você define a amostra</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04_MensuracaoAB.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">📈 Mensurando os resultados</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05_DiversosGrupos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">👥 Analisando diversos perfis</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06_Anexo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">📎Anexos</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">📚Referências</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#cenário" id="toc-cenário" class="nav-link active" data-scroll-target="#cenário"><span class="header-section-number">4.1</span> 🏞️ Cenário</a></li>
+  <li><a href="#base-de-dados" id="toc-base-de-dados" class="nav-link" data-scroll-target="#base-de-dados"><span class="header-section-number">4.2</span> 🗂️ Base de dados</a></li>
+  <li><a href="#mensuração-dos-resultados" id="toc-mensuração-dos-resultados" class="nav-link" data-scroll-target="#mensuração-dos-resultados"><span class="header-section-number">4.3</span> 📈 Mensuração dos resultados</a>
+  <ul class="collapse">
+  <li><a href="#import-das-bibliotecas" id="toc-import-das-bibliotecas" class="nav-link" data-scroll-target="#import-das-bibliotecas"><span class="header-section-number">4.3.1</span> 📥 Import das bibliotecas</a></li>
+  <li><a href="#avalia-o-tamanho-da-amostra" id="toc-avalia-o-tamanho-da-amostra" class="nav-link" data-scroll-target="#avalia-o-tamanho-da-amostra"><span class="header-section-number">4.3.2</span> 🔎Avalia o tamanho da amostra</a></li>
+  <li><a href="#amostra-mínima" id="toc-amostra-mínima" class="nav-link" data-scroll-target="#amostra-mínima"><span class="header-section-number">4.3.3</span> 🔎Amostra mínima</a></li>
+  <li><a href="#analise-do-resultado-do-teste" id="toc-analise-do-resultado-do-teste" class="nav-link" data-scroll-target="#analise-do-resultado-do-teste"><span class="header-section-number">4.3.4</span> 📉 Analise do resultado do teste</a></li>
+  <li><a href="#delta-conversão" id="toc-delta-conversão" class="nav-link" data-scroll-target="#delta-conversão"><span class="header-section-number">4.3.5</span> 📉 Delta Conversão</a></li>
+  <li><a href="#lift" id="toc-lift" class="nav-link" data-scroll-target="#lift"><span class="header-section-number">4.3.6</span> 📉 Lift</a></li>
+  <li><a href="#incremento-de-contas" id="toc-incremento-de-contas" class="nav-link" data-scroll-target="#incremento-de-contas"><span class="header-section-number">4.3.7</span> 📉 Incremento de contas</a></li>
+  <li><a href="#incremento-de-gasto" id="toc-incremento-de-gasto" class="nav-link" data-scroll-target="#incremento-de-gasto"><span class="header-section-number">4.3.8</span> 📉 Incremento de gasto</a></li>
+  <li><a href="#incremento-de-faturamento" id="toc-incremento-de-faturamento" class="nav-link" data-scroll-target="#incremento-de-faturamento"><span class="header-section-number">4.3.9</span> 📉 Incremento de faturamento</a></li>
+  <li><a href="#analise-da-variável-contínua" id="toc-analise-da-variável-contínua" class="nav-link" data-scroll-target="#analise-da-variável-contínua"><span class="header-section-number">4.3.10</span> 📈 Analise da variável contínua</a></li>
+  </ul></li>
+  <li><a href="#avalição-completa-dos-resultados" id="toc-avalição-completa-dos-resultados" class="nav-link" data-scroll-target="#avalição-completa-dos-resultados"><span class="header-section-number">4.4</span> 📊 Avalição completa dos resultados</a>
+  <ul class="collapse">
+  <li><a href="#qual-decisão-tomar" id="toc-qual-decisão-tomar" class="nav-link" data-scroll-target="#qual-decisão-tomar"><span class="header-section-number">4.4.1</span> 📚 Qual decisão tomar?</a></li>
+  <li><a href="#tabela-de-avaliação-dos-resultados" id="toc-tabela-de-avaliação-dos-resultados" class="nav-link" data-scroll-target="#tabela-de-avaliação-dos-resultados"><span class="header-section-number">4.4.2</span> <strong>📋</strong>Tabela de avaliação dos resultados</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">📈 Mensurando os resultados</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Muitas vezes não temos a oportunidade de participar da decisão do volume das amostras, pois muitas campanhas podem ser automatizadas e não atigirem o número que seria adequado, esse pode ser um cenário para campanhas estremamente segmentadas. Mesmo assim, essas precisam ser <strong>MENSURADAS</strong>.</p>
+<section id="cenário" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="cenário"><span class="header-section-number">4.1</span> 🏞️ Cenário</h2>
+<p>Foi realizada uma campanha que visava fazer o cliente realizar uma compra para ativar o seu cartão. Ou seja, queremos saber se o estimulo de comunicar uma oferta fez com que esse cliente voltasse a transacionar, e como um efeito colateral também podemos avaliar o aumento de gasto.</p>
+</section>
+<section id="base-de-dados" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="base-de-dados"><span class="header-section-number">4.2</span> 🗂️ Base de dados</h2>
+<p>Para realizar essa mensuração, você precisa receber uma base que possua as seguintes informações:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variável</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>CLIENTNUM</td>
+<td>Identificador único do cliente</td>
+</tr>
+<tr class="even">
+<td>GRUPO_AB</td>
+<td>Grupo experimental A/B ao qual pertence (Teste e Controle)</td>
+</tr>
+<tr class="odd">
+<td>FL_ATIVADO</td>
+<td>Flag indicando se o cliente ativou o cartão durante o período da ação</td>
+</tr>
+<tr class="even">
+<td>VALOR_GASTO</td>
+<td>Valor total gasto pelo cliente</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="mensuração-dos-resultados" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="mensuração-dos-resultados"><span class="header-section-number">4.3</span> 📈 Mensuração dos resultados</h2>
+<p><strong>*dados ficticios</strong></p>
+<p>Garanta que a separação do grupo_ab tenha sido feita adequadamente antes de iniciar os envios das comunicações, pois caso isso não ocorra, sua mensuração está fadada ao fracasso. No anexo desse conteúdo, há uma sugestão de como criar um grupo controle confiável para sua empresa.</p>
+<section id="import-das-bibliotecas" class="level3" data-number="4.3.1">
+<h3 data-number="4.3.1" class="anchored" data-anchor-id="import-das-bibliotecas"><span class="header-section-number">4.3.1</span> 📥 Import das bibliotecas</h3>
+<div id="6cfebbdb" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> ttest_ind</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> chi2_contingency</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.stats.power <span class="im">import</span> zt_ind_solve_power</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">#sys.stdout.reconfigure(encoding='utf-8')</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="2c003373" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Importa o arquivo gerado com os resultados de forma analitica</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">'./base_ativados_gasto.csv'</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="2">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">CLIENTNUM</th>
+<th data-quarto-table-cell-role="th">GRUPO_AB</th>
+<th data-quarto-table-cell-role="th">FL_ATIVADO</th>
+<th data-quarto-table-cell-role="th">VALOR_GASTO</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>1</td>
+<td>Controle</td>
+<td>0</td>
+<td>0.000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>2</td>
+<td>Teste</td>
+<td>0</td>
+<td>0.000000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>3</td>
+<td>Teste</td>
+<td>0</td>
+<td>0.000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>4</td>
+<td>Teste</td>
+<td>0</td>
+<td>0.000000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>5</td>
+<td>Teste</td>
+<td>1</td>
+<td>2185.430535</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="avalia-o-tamanho-da-amostra" class="level3" data-number="4.3.2">
+<h3 data-number="4.3.2" class="anchored" data-anchor-id="avalia-o-tamanho-da-amostra"><span class="header-section-number">4.3.2</span> 🔎Avalia o tamanho da amostra</h3>
+<div id="6da9b7a1" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Supondo um efeito mínimo detectável (MDE) de 1 ponto percentual (0.01)</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>p1 <span class="op">=</span> <span class="fl">0.05</span>           <span class="co"># Conversão esperada no grupo Controle</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>delta <span class="op">=</span> <span class="fl">0.01</span>        <span class="co"># MDE (efeito mínimo que desejamos detectar)</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>p2 <span class="op">=</span> p1 <span class="op">+</span> delta     <span class="co"># Conversão esperada no grupo Teste</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcular effect size para teste de duas proporções</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>pooled_var <span class="op">=</span> ((p1 <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> p1)) <span class="op">+</span> (p2 <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> p2))) <span class="op">/</span> <span class="dv">2</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>effect_size <span class="op">=</span> delta <span class="op">/</span> pooled_var<span class="op">**</span><span class="fl">0.5</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcular a amostra mínima por grupo</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>n_min <span class="op">=</span> zt_ind_solve_power(effect_size<span class="op">=</span>effect_size, alpha<span class="op">=</span><span class="fl">0.05</span>, power<span class="op">=</span><span class="fl">0.80</span>)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>n_min <span class="op">=</span> <span class="bu">int</span>(<span class="bu">round</span>(n_min))</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Avaliar se os tamanhos dos grupos são suficientes</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>n_controle <span class="op">=</span> df[<span class="st">'GRUPO_AB'</span>].value_counts()[<span class="st">'Controle'</span>]</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>n_teste <span class="op">=</span> df[<span class="st">'GRUPO_AB'</span>].value_counts()[<span class="st">'Teste'</span>]</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>teste_suficiente <span class="op">=</span> n_teste <span class="op">&gt;=</span> n_min</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>controle_suficiente <span class="op">=</span> n_controle <span class="op">&gt;=</span> n_min</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    <span class="st">"MDE (delta)"</span>: <span class="ss">f"</span><span class="sc">{</span>delta<span class="sc">:.2%}</span><span class="ss">"</span>,</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Amostra mínima por grupo"</span>: n_min,</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Tamanho Controle"</span>: n_controle,</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Tamanho Teste"</span>: n_teste,</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Controle Suficiente"</span>: controle_suficiente,</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Teste Suficiente"</span>: teste_suficiente</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<pre><code>{'MDE (delta)': '1.00%',
+ 'Amostra mínima por grupo': 8155,
+ 'Tamanho Controle': 12308,
+ 'Tamanho Teste': 109216,
+ 'Controle Suficiente': True,
+ 'Teste Suficiente': True}</code></pre>
+</div>
+</div>
+</section>
+<section id="amostra-mínima" class="level3" data-number="4.3.3">
+<h3 data-number="4.3.3" class="anchored" data-anchor-id="amostra-mínima"><span class="header-section-number">4.3.3</span> 🔎Amostra mínima</h3>
+<p>Qual seria a amostra mínima desse teste?</p>
+<div id="7c99aa36" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Total de público disponível</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>total_disponivel <span class="op">=</span> n_controle <span class="op">+</span> n_teste</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Função para encontrar a melhor alocação que satisfaz a amostra mínima por grupo</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> melhor_distribuicao(total, n_min):</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> controle <span class="kw">in</span> <span class="bu">range</span>(n_min, total <span class="op">-</span> n_min <span class="op">+</span> <span class="dv">1</span>):</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>        teste <span class="op">=</span> total <span class="op">-</span> controle</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> teste <span class="op">&gt;=</span> n_min:</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> controle, teste</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="va">None</span>, <span class="va">None</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>melhor_controle, melhor_teste <span class="op">=</span> melhor_distribuicao(total_disponivel, n_min)</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Total disponível"</span>: total_disponivel,</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Amostra mínima por grupo (para delta de 1%)"</span>: n_min,</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Distribuição ideal - Controle"</span>: melhor_controle,</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Distribuição ideal - Teste"</span>: melhor_teste</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<pre><code>{'Total disponível': 121524,
+ 'Amostra mínima por grupo (para delta de 1%)': 8155,
+ 'Distribuição ideal - Controle': 8155,
+ 'Distribuição ideal - Teste': 113369}</code></pre>
+</div>
+</div>
+<p>Independente dos resultados obtidos nessa fase, você deve continuar a mensurar os seus resultados, pois ao menos podemos interpretar algumas tendências de resultados, o que pode ser base para um novo teste corrigindo o tamanho da amostra.</p>
+</section>
+<section id="analise-do-resultado-do-teste" class="level3" data-number="4.3.4">
+<h3 data-number="4.3.4" class="anchored" data-anchor-id="analise-do-resultado-do-teste"><span class="header-section-number">4.3.4</span> 📉 Analise do resultado do teste</h3>
+<ul>
+<li>O período de leitura terminou?</li>
+<li>Sua variável de analise é binária ou contínua?
+<ul>
+<li>Comprou ou não comprou (ativou ou não, contratou ou não)</li>
+<li>Valor gasto (valor contratado, valor faturamento)</li>
+</ul></li>
+</ul>
+<div id="4aa64c40" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Criar tabela de contingência entre grupo e compra</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>contingencia <span class="op">=</span> pd.crosstab(df[<span class="st">'GRUPO_AB'</span>], df[<span class="st">'FL_ATIVADO'</span>])</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>contingencia</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">FL_ATIVADO</th>
+<th data-quarto-table-cell-role="th">0</th>
+<th data-quarto-table-cell-role="th">1</th>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">GRUPO_AB</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Controle</td>
+<td>6158</td>
+<td>6150</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Teste</td>
+<td>49157</td>
+<td>60059</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="aa1dcec7" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Aplicar o teste do qui-quadrado -- Verifique se esse é o teste mais adequado para os tipos de variáveis que você possui.</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>chi2, p, dof, expected <span class="op">=</span> chi2_contingency(contingencia)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Por que o valor de p é tão amado e odiado por muita gente. Me convenceram que é muito bom, mas não faz milagre.</p>
+<div id="3becb078" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Exibir resultados</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>contingencia, p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<pre><code>(FL_ATIVADO      0      1
+ GRUPO_AB                
+ Controle     6158   6150
+ Teste       49157  60059,
+ 2.979975996279689e-26)</code></pre>
+</div>
+</div>
+<div id="83f70917" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># considere um alpha para sua área de rejeição</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>alpha <span class="op">=</span> <span class="fl">0.05</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> p <span class="op">&lt;</span> alpha:</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">'✅ Resultado Estatisticamente Significativo: Existe diferença real entre os grupos. '</span>)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">'❌ Resultado NÃO Estatisticamente Significativo: Não existe evidência suficiente para afirmar diferença entre grupos.'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>✅ Resultado Estatisticamente Significativo: Existe diferença real entre os grupos. </code></pre>
+</div>
+</div>
+</section>
+<section id="delta-conversão" class="level3" data-number="4.3.5">
+<h3 data-number="4.3.5" class="anchored" data-anchor-id="delta-conversão"><span class="header-section-number">4.3.5</span> 📉 Delta Conversão</h3>
+<p>É a diferença entre os percentuais de conversão do grupo de teste e controle</p>
+<div id="26d136df" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>taxas <span class="op">=</span> df.groupby(<span class="st">'GRUPO_AB'</span>)[<span class="st">'FL_ATIVADO'</span>].mean()</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>taxas</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="9">
+<pre><code>GRUPO_AB
+Controle    0.499675
+Teste       0.549910
+Name: FL_ATIVADO, dtype: float64</code></pre>
+</div>
+</div>
+<div id="17a20c96" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcular e formatar o delta de taxa de conversão entre Teste e Controle</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>delta_taxa_conversao <span class="op">=</span> taxas[<span class="st">'Teste'</span>] <span class="op">-</span> taxas[<span class="st">'Controle'</span>]</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Reformatar delta como pontos percentuais (p.p.)</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>delta_taxa_formatado_pp <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>delta_taxa_conversao <span class="op">*</span> <span class="dv">100</span><span class="sc">:.2f}</span><span class="ss"> p.p."</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Exibir com print</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Diferença absoluta na taxa de conversão (Delta): </span><span class="sc">{</span>delta_taxa_formatado_pp<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Diferença absoluta na taxa de conversão (Delta): 5.02 p.p.</code></pre>
+</div>
+</div>
+</section>
+<section id="lift" class="level3" data-number="4.3.6">
+<h3 data-number="4.3.6" class="anchored" data-anchor-id="lift"><span class="header-section-number">4.3.6</span> 📉 Lift</h3>
+<p>É o ganho percentual que foi obtido com essa ação.</p>
+<div id="c0866fa6" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>lift_conversao <span class="op">=</span> (taxas[<span class="st">'Teste'</span>] <span class="op">-</span> taxas[<span class="st">'Controle'</span>]) <span class="op">/</span> taxas[<span class="st">'Controle'</span>]</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>lift_conversao</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Formatar lift de conversão como percentual com 2 casas decimais</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>lift_conversao_percentual <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>lift_conversao <span class="op">*</span> <span class="dv">100</span><span class="sc">:.2f}</span><span class="ss">%"</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>lift_conversao_percentual</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="11">
+<pre><code>'10.05%'</code></pre>
+</div>
+</div>
+</section>
+<section id="incremento-de-contas" class="level3" data-number="4.3.7">
+<h3 data-number="4.3.7" class="anchored" data-anchor-id="incremento-de-contas"><span class="header-section-number">4.3.7</span> 📉 Incremento de contas</h3>
+<p>Pelo fato de ter feito o teste, quanto de contas vieram de</p>
+<div id="877ddbea" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcular o tamanho do público de teste</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>publico_teste <span class="op">=</span> df[df[<span class="st">'GRUPO_AB'</span>] <span class="op">==</span> <span class="st">'Teste'</span>].shape[<span class="dv">0</span>]</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcular o incremento de contas</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>incremento_contas <span class="op">=</span> publico_teste <span class="op">*</span> (taxas[<span class="st">'Teste'</span>] <span class="op">-</span> taxas[<span class="st">'Controle'</span>])</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Arredondar o incremento</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>incremento_final <span class="op">=</span> <span class="bu">int</span>(<span class="bu">round</span>(incremento_contas))</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Verificar se o teste foi positivo</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>resultado_incremento <span class="op">=</span> (</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>    <span class="ss">f"</span><span class="sc">{</span>incremento_final<span class="sc">}</span><span class="ss"> contas a mais por causa do teste"</span> <span class="cf">if</span> incremento_final <span class="op">&gt;</span> <span class="dv">0</span> </span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span> <span class="st">"O teste não gerou incremento de contas"</span></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>resultado_incremento</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="12">
+<pre><code>'5486 contas a mais por causa do teste'</code></pre>
+</div>
+</div>
+</section>
+<section id="incremento-de-gasto" class="level3" data-number="4.3.8">
+<h3 data-number="4.3.8" class="anchored" data-anchor-id="incremento-de-gasto"><span class="header-section-number">4.3.8</span> 📉 Incremento de gasto</h3>
+<p>Quanto a mais o grupo de teste gastou devido esse estimulo.</p>
+<div id="158368dd" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcular gasto médio entre grupos</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>gasto_medio <span class="op">=</span> df.groupby(<span class="st">'GRUPO_AB'</span>)[<span class="st">'VALOR_GASTO'</span>].mean()</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcular delta gasto: diferença entre gasto médio do Teste e do Controle</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>delta_gasto <span class="op">=</span> gasto_medio[<span class="st">'Teste'</span>] <span class="op">-</span> gasto_medio[<span class="st">'Controle'</span>]</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Número de clientes convertidos no grupo Controle</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>conversoes_controle <span class="op">=</span> df[df[<span class="st">'GRUPO_AB'</span>] <span class="op">==</span> <span class="st">'Controle'</span>][<span class="st">'FL_ATIVADO'</span>].<span class="bu">sum</span>()</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Incremento estimado de gasto</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>incremento_gasto <span class="op">=</span> delta_gasto <span class="op">*</span> conversoes_controle</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a><span class="co">#delta_gasto, incremento_gasto</span></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Usar print para exibir cada linha separadamente</span></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Resultados do impacto financeiro no experimento:</span><span class="ch">\n</span><span class="st">"</span>)</span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Delta de Gasto Médio (Teste - Controle): R$ </span><span class="sc">{</span>delta_gasto<span class="sc">:,.2f}</span><span class="ss">"</span>.replace(<span class="st">","</span>, <span class="st">"X"</span>).replace(<span class="st">"."</span>, <span class="st">","</span>).replace(<span class="st">"X"</span>, <span class="st">"."</span>))</span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Incremento de Gasto Total (base Controle): R$ </span><span class="sc">{</span>incremento_gasto<span class="sc">:,.2f}</span><span class="ss">"</span>.replace(<span class="st">","</span>, <span class="st">"X"</span>).replace(<span class="st">"."</span>, <span class="st">","</span>).replace(<span class="st">"X"</span>, <span class="st">"."</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Resultados do impacto financeiro no experimento:
+
+Delta de Gasto Médio (Teste - Controle): R$ 143,31
+Incremento de Gasto Total (base Controle): R$ 881.357,95</code></pre>
+</div>
+</div>
+</section>
+<section id="incremento-de-faturamento" class="level3" data-number="4.3.9">
+<h3 data-number="4.3.9" class="anchored" data-anchor-id="incremento-de-faturamento"><span class="header-section-number">4.3.9</span> 📉 Incremento de faturamento</h3>
+<p>Os clientes que vieram a mais por causa do experimento também contribuem para o faturamento, logo precisamos incluí-los:</p>
+<p>Incremento de faturamento = Incremento de Contas * Gasto Médio Controle + Incremento de Gasto</p>
+<div id="902d74c8" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reutilizando variáveis já calculadas</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>gasto_medio_controle <span class="op">=</span> gasto_medio[<span class="st">'Controle'</span>]  <span class="co"># gasto médio no grupo Controle</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>gasto_medio_teste <span class="op">=</span> gasto_medio[<span class="st">'Teste'</span>]  <span class="co"># gasto médio no grupo Controle</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Incremento total de faturamento = contas a mais * gasto médio + incremento de gasto</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>incremento_faturamento <span class="op">=</span> incremento_final <span class="op">*</span> gasto_medio_controle <span class="op">+</span> incremento_gasto</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Formatar resultado para apresentação</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Incremento Total de Faturamento: R$ </span><span class="sc">{</span>incremento_faturamento<span class="sc">:,.2f}</span><span class="ss">"</span>.replace(<span class="st">","</span>, <span class="st">"X"</span>).replace(<span class="st">"."</span>, <span class="st">","</span>).replace(<span class="st">"X"</span>, <span class="st">"."</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Incremento Total de Faturamento: R$ 8.388.591,06</code></pre>
+</div>
+</div>
+</section>
+<section id="analise-da-variável-contínua" class="level3" data-number="4.3.10">
+<h3 data-number="4.3.10" class="anchored" data-anchor-id="analise-da-variável-contínua"><span class="header-section-number">4.3.10</span> 📈 Analise da variável contínua</h3>
+<div id="15ceecef" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>metrica <span class="op">=</span> <span class="st">'VALOR_GASTO'</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Separar os dados por grupo</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>grupo_controle <span class="op">=</span> df[df[<span class="st">'GRUPO_AB'</span>] <span class="op">==</span> <span class="st">'Controle'</span>][metrica]</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>grupo_teste <span class="op">=</span> df[df[<span class="st">'GRUPO_AB'</span>] <span class="op">==</span> <span class="st">'Teste'</span>][metrica]</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Realizar o teste-t (comparação das médias)</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>t_stat, p_valor <span class="op">=</span> ttest_ind(grupo_teste, grupo_controle)</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Avaliação dos resultados</span></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>alpha <span class="op">=</span> <span class="fl">0.05</span></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Média do grupo Controle: </span><span class="sc">{</span>grupo_controle<span class="sc">.</span>mean()<span class="sc">:.2f}</span><span class="ss">'</span>)</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Média do grupo Teste: </span><span class="sc">{</span>grupo_teste<span class="sc">.</span>mean()<span class="sc">:.2f}</span><span class="ss">'</span>)</span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'p-valor do teste: </span><span class="sc">{</span>p_valor<span class="sc">:.4f}</span><span class="ss">'</span>)</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> p_valor <span class="op">&lt;</span> alpha:</span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">'✅ Resultado Estatisticamente Significativo: Existe diferença real entre os grupos.'</span>)</span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">'❌ Resultado NÃO Estatisticamente Significativo: Não existe evidência suficiente para afirmar diferença entre grupos. '</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Média do grupo Controle: 1368.43
+Média do grupo Teste: 1511.74
+p-valor do teste: 0.0000
+✅ Resultado Estatisticamente Significativo: Existe diferença real entre os grupos.</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="avalição-completa-dos-resultados" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="avalição-completa-dos-resultados"><span class="header-section-number">4.4</span> 📊 Avalição completa dos resultados</h2>
+<div id="61710b23" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>qtde_teste <span class="op">=</span> df[df[<span class="st">'GRUPO_AB'</span>] <span class="op">==</span> <span class="st">'Teste'</span>].shape[<span class="dv">0</span>]</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>qtde_controle <span class="op">=</span> df[df[<span class="st">'GRUPO_AB'</span>] <span class="op">==</span> <span class="st">'Controle'</span>].shape[<span class="dv">0</span>]</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>conv_teste <span class="op">=</span> taxas[<span class="st">'Teste'</span>]</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>conv_controle <span class="op">=</span> taxas[<span class="st">'Controle'</span>]</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>hipotese_conv <span class="op">=</span> <span class="st">"Rejeita H₀ - Existe Diferença"</span> <span class="cf">if</span> p <span class="op">&lt;</span> <span class="fl">0.05</span> <span class="cf">else</span> <span class="st">"Aceita H₀ - Não Existe Diferença"</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>hipotese_gasto <span class="op">=</span> <span class="st">"Rejeita H₀ - Existe Diferença"</span> <span class="cf">if</span> p_valor <span class="op">&lt;</span> <span class="fl">0.05</span> <span class="cf">else</span> <span class="st">"Aceita H₀ - Não Existe Diferença"</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Avaliação simples da qualidade do resultado</span></span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> classifica_resultado(delta_conv, delta_gasto, pval_conv, pval_gasto, incremento_faturamento):</span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>    aval <span class="op">=</span> []</span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> p <span class="op">&lt;</span> <span class="fl">0.05</span> <span class="kw">and</span> delta_conv <span class="op">&gt;</span> <span class="dv">0</span>:</span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>        aval.append(<span class="st">"✅ Conversão melhor e significativa"</span>)</span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> delta_conv <span class="op">&gt;</span> <span class="dv">0</span>:</span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>        aval.append(<span class="st">"⚠️ Conversão melhor, mas não significativa"</span>)</span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a>        aval.append(<span class="st">"❌ Conversão pior ou igual"</span>)</span>
+<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> p_valor <span class="op">&lt;</span> <span class="fl">0.05</span> <span class="kw">and</span> delta_gasto <span class="op">&gt;</span> <span class="dv">0</span>:</span>
+<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a>        aval.append(<span class="st">"✅ Gasto médio maior e significativo"</span>)</span>
+<span id="cb27-24"><a href="#cb27-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> delta_gasto <span class="op">&gt;</span> <span class="dv">0</span>:</span>
+<span id="cb27-25"><a href="#cb27-25" aria-hidden="true" tabindex="-1"></a>        aval.append(<span class="st">"⚠️ Gasto médio maior, mas não significativo"</span>)</span>
+<span id="cb27-26"><a href="#cb27-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb27-27"><a href="#cb27-27" aria-hidden="true" tabindex="-1"></a>        aval.append(<span class="st">"❌ Gasto médio menor ou igual"</span>)</span>
+<span id="cb27-28"><a href="#cb27-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-29"><a href="#cb27-29" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> incremento_faturamento <span class="op">&gt;</span> <span class="dv">0</span>:</span>
+<span id="cb27-30"><a href="#cb27-30" aria-hidden="true" tabindex="-1"></a>        aval.append(<span class="st">"✅ Incremento financeiro positivo"</span>)</span>
+<span id="cb27-31"><a href="#cb27-31" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb27-32"><a href="#cb27-32" aria-hidden="true" tabindex="-1"></a>        aval.append(<span class="st">"❌ Sem impacto financeiro"</span>)</span>
+<span id="cb27-33"><a href="#cb27-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-34"><a href="#cb27-34" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="st">" | "</span>.join(aval)</span>
+<span id="cb27-35"><a href="#cb27-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-36"><a href="#cb27-36" aria-hidden="true" tabindex="-1"></a>avaliacao_geral <span class="op">=</span> classifica_resultado(delta_taxa_conversao, delta_gasto, p, p_valor, incremento_faturamento)</span>
+<span id="cb27-37"><a href="#cb27-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-38"><a href="#cb27-38" aria-hidden="true" tabindex="-1"></a><span class="co"># Tabela resumo com avaliação geral</span></span>
+<span id="cb27-39"><a href="#cb27-39" aria-hidden="true" tabindex="-1"></a>tabela_resumo_completa <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb27-40"><a href="#cb27-40" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Métrica'</span>: [</span>
+<span id="cb27-41"><a href="#cb27-41" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Qtde Teste'</span>, <span class="st">'Qtde Controle'</span>,</span>
+<span id="cb27-42"><a href="#cb27-42" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Conversão Teste'</span>, <span class="st">'Conversão Controle'</span>, <span class="st">'Delta Conversão'</span>, <span class="st">'Lift'</span>,</span>
+<span id="cb27-43"><a href="#cb27-43" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Resultado Teste Hipótese Conversão'</span>, <span class="st">'Incremento de Contas'</span>,</span>
+<span id="cb27-44"><a href="#cb27-44" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Gasto Médio Teste'</span>, <span class="st">'Gasto Médio Controle'</span>, <span class="st">'Delta Gasto'</span>,</span>
+<span id="cb27-45"><a href="#cb27-45" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Resultado Teste Hipótese Gasto'</span>, <span class="st">'Incremento de Gasto'</span>,</span>
+<span id="cb27-46"><a href="#cb27-46" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Incremento de Faturamento'</span>, <span class="st">'Avaliação Geral'</span></span>
+<span id="cb27-47"><a href="#cb27-47" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="cb27-48"><a href="#cb27-48" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Resultado'</span>: [</span>
+<span id="cb27-49"><a href="#cb27-49" aria-hidden="true" tabindex="-1"></a>        qtde_teste, qtde_controle,</span>
+<span id="cb27-50"><a href="#cb27-50" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"</span><span class="sc">{</span>conv_teste<span class="sc">:.2%}</span><span class="ss">"</span>, <span class="ss">f"</span><span class="sc">{</span>conv_controle<span class="sc">:.2%}</span><span class="ss">"</span>, <span class="ss">f"</span><span class="sc">{</span>delta_taxa_conversao <span class="op">*</span> <span class="dv">100</span><span class="sc">:.2f}</span><span class="ss"> p.p."</span>,lift_conversao_percentual,</span>
+<span id="cb27-51"><a href="#cb27-51" aria-hidden="true" tabindex="-1"></a>        hipotese_conv, incremento_final,</span>
+<span id="cb27-52"><a href="#cb27-52" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"R$ </span><span class="sc">{</span>gasto_medio_teste<span class="sc">:,.2f}</span><span class="ss">"</span>.replace(<span class="st">","</span>, <span class="st">"X"</span>).replace(<span class="st">"."</span>, <span class="st">","</span>).replace(<span class="st">"X"</span>, <span class="st">"."</span>),</span>
+<span id="cb27-53"><a href="#cb27-53" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"R$ </span><span class="sc">{</span>gasto_medio_controle<span class="sc">:,.2f}</span><span class="ss">"</span>.replace(<span class="st">","</span>, <span class="st">"X"</span>).replace(<span class="st">"."</span>, <span class="st">","</span>).replace(<span class="st">"X"</span>, <span class="st">"."</span>),</span>
+<span id="cb27-54"><a href="#cb27-54" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"R$ </span><span class="sc">{</span>delta_gasto<span class="sc">:,.2f}</span><span class="ss">"</span>.replace(<span class="st">","</span>, <span class="st">"X"</span>).replace(<span class="st">"."</span>, <span class="st">","</span>).replace(<span class="st">"X"</span>, <span class="st">"."</span>),</span>
+<span id="cb27-55"><a href="#cb27-55" aria-hidden="true" tabindex="-1"></a>        hipotese_gasto,</span>
+<span id="cb27-56"><a href="#cb27-56" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"R$ </span><span class="sc">{</span>incremento_gasto<span class="sc">:,.2f}</span><span class="ss">"</span>.replace(<span class="st">","</span>, <span class="st">"X"</span>).replace(<span class="st">"."</span>, <span class="st">","</span>).replace(<span class="st">"X"</span>, <span class="st">"."</span>),</span>
+<span id="cb27-57"><a href="#cb27-57" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"R$ </span><span class="sc">{</span>incremento_faturamento<span class="sc">:,.2f}</span><span class="ss">"</span>.replace(<span class="st">","</span>, <span class="st">"X"</span>).replace(<span class="st">"."</span>, <span class="st">","</span>).replace(<span class="st">"X"</span>, <span class="st">"."</span>),</span>
+<span id="cb27-58"><a href="#cb27-58" aria-hidden="true" tabindex="-1"></a>        avaliacao_geral</span>
+<span id="cb27-59"><a href="#cb27-59" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb27-60"><a href="#cb27-60" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb27-61"><a href="#cb27-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-62"><a href="#cb27-62" aria-hidden="true" tabindex="-1"></a><span class="co"># Como Excel</span></span>
+<span id="cb27-63"><a href="#cb27-63" aria-hidden="true" tabindex="-1"></a>tabela_resumo_completa.to_excel(<span class="st">"Mensuracao_TesteAB.xlsx"</span>, index<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb27-64"><a href="#cb27-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-65"><a href="#cb27-65" aria-hidden="true" tabindex="-1"></a>tabela_resumo_completa</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="16">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Métrica</th>
+<th data-quarto-table-cell-role="th">Resultado</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>Qtde Teste</td>
+<td>109216</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>Qtde Controle</td>
+<td>12308</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>Conversão Teste</td>
+<td>54.99%</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>Conversão Controle</td>
+<td>49.97%</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>Delta Conversão</td>
+<td>5.02 p.p.</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>Lift</td>
+<td>10.05%</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>Resultado Teste Hipótese Conversão</td>
+<td>Rejeita H₀ - Existe Diferença</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7</td>
+<td>Incremento de Contas</td>
+<td>5486</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8</td>
+<td>Gasto Médio Teste</td>
+<td>R$ 1.511,74</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">9</td>
+<td>Gasto Médio Controle</td>
+<td>R$ 1.368,43</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">10</td>
+<td>Delta Gasto</td>
+<td>R$ 143,31</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">11</td>
+<td>Resultado Teste Hipótese Gasto</td>
+<td>Rejeita H₀ - Existe Diferença</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">12</td>
+<td>Incremento de Gasto</td>
+<td>R$ 881.357,95</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">13</td>
+<td>Incremento de Faturamento</td>
+<td>R$ 8.388.591,06</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">14</td>
+<td>Avaliação Geral</td>
+<td>✅ Conversão melhor e significativa | ✅ Gasto m...</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<pre><code></code></pre>
+<section id="qual-decisão-tomar" class="level3" data-number="4.4.1">
+<h3 data-number="4.4.1" class="anchored" data-anchor-id="qual-decisão-tomar"><span class="header-section-number">4.4.1</span> 📚 Qual decisão tomar?</h3>
+<div id="49d4e2d8" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reescrevendo a função classifica_resultado com inserção da verificação da suficiência da amostra</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> classifica_resultado_com_amostra(delta_conv, delta_gasto, p, p_valor, incremento_faturamento, teste_suf, controle_suf):</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>    aval <span class="op">=</span> []</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Verificação de conversão</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> (teste_suf <span class="kw">and</span> controle_suf):</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>        aval.append(<span class="st">"❌ Amostras insuficientes para avaliar conversão"</span>)</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> p <span class="op">&lt;</span> <span class="fl">0.05</span> <span class="kw">and</span> delta_conv <span class="op">&gt;</span> <span class="dv">0</span>:</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>        aval.append(<span class="st">"✅ Conversão melhor e significativa"</span>)</span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> delta_conv <span class="op">&gt;</span> <span class="dv">0</span>:</span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>        aval.append(<span class="st">"⚠️ Conversão melhor, mas não significativa"</span>)</span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>        aval.append(<span class="st">"❌ Conversão pior ou igual"</span>)</span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Verificação de gasto</span></span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> p_valor <span class="op">&lt;</span> <span class="fl">0.05</span> <span class="kw">and</span> delta_gasto <span class="op">&gt;</span> <span class="dv">0</span>:</span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a>        aval.append(<span class="st">"✅ Gasto médio maior e significativo"</span>)</span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> delta_gasto <span class="op">&gt;</span> <span class="dv">0</span>:</span>
+<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a>        aval.append(<span class="st">"⚠️ Gasto médio maior, mas não significativo"</span>)</span>
+<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a>        aval.append(<span class="st">"❌ Gasto médio menor ou igual"</span>)</span>
+<span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-24"><a href="#cb29-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Verificação de faturamento</span></span>
+<span id="cb29-25"><a href="#cb29-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> incremento_faturamento <span class="op">&gt;</span> <span class="dv">0</span>:</span>
+<span id="cb29-26"><a href="#cb29-26" aria-hidden="true" tabindex="-1"></a>        aval.append(<span class="st">"✅ Incremento financeiro positivo"</span>)</span>
+<span id="cb29-27"><a href="#cb29-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb29-28"><a href="#cb29-28" aria-hidden="true" tabindex="-1"></a>        aval.append(<span class="st">"❌ Sem impacto financeiro"</span>)</span>
+<span id="cb29-29"><a href="#cb29-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-30"><a href="#cb29-30" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="st">" | "</span>.join(aval)</span>
+<span id="cb29-31"><a href="#cb29-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-32"><a href="#cb29-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcular avaliação com variáveis existentes</span></span>
+<span id="cb29-33"><a href="#cb29-33" aria-hidden="true" tabindex="-1"></a>avaliacao_completa <span class="op">=</span> classifica_resultado_com_amostra(</span>
+<span id="cb29-34"><a href="#cb29-34" aria-hidden="true" tabindex="-1"></a>    delta_taxa_conversao, delta_gasto, p, p_valor,</span>
+<span id="cb29-35"><a href="#cb29-35" aria-hidden="true" tabindex="-1"></a>    incremento_faturamento, controle_suficiente, teste_suficiente</span>
+<span id="cb29-36"><a href="#cb29-36" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb29-37"><a href="#cb29-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-38"><a href="#cb29-38" aria-hidden="true" tabindex="-1"></a><span class="co"># Reavaliar a classificação anterior com base na decisão da tabela interpretativa</span></span>
+<span id="cb29-39"><a href="#cb29-39" aria-hidden="true" tabindex="-1"></a><span class="co"># Vamos mapear o resultado da função classifica_resultado_com_amostra para a decisão final</span></span>
+<span id="cb29-40"><a href="#cb29-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-41"><a href="#cb29-41" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> decisao_final(avaliacao_texto):</span>
+<span id="cb29-42"><a href="#cb29-42" aria-hidden="true" tabindex="-1"></a>    amostra_ok <span class="op">=</span> <span class="st">"insuficientes"</span> <span class="kw">not</span> <span class="kw">in</span> avaliacao_texto</span>
+<span id="cb29-43"><a href="#cb29-43" aria-hidden="true" tabindex="-1"></a>    conversao_ok <span class="op">=</span> <span class="st">"Conversão melhor e significativa"</span> <span class="kw">in</span> avaliacao_texto</span>
+<span id="cb29-44"><a href="#cb29-44" aria-hidden="true" tabindex="-1"></a>    gasto_ok <span class="op">=</span> <span class="st">"Gasto médio maior e significativo"</span> <span class="kw">in</span> avaliacao_texto</span>
+<span id="cb29-45"><a href="#cb29-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-46"><a href="#cb29-46" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Definir a linha da tabela com base na combinação de flags</span></span>
+<span id="cb29-47"><a href="#cb29-47" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> amostra_ok <span class="kw">and</span> conversao_ok <span class="kw">and</span> gasto_ok:</span>
+<span id="cb29-48"><a href="#cb29-48" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">"✅ Resultados estatisticamente confiáveis. Pode fazer rollout com segurança."</span></span>
+<span id="cb29-49"><a href="#cb29-49" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> amostra_ok <span class="kw">and</span> conversao_ok <span class="kw">and</span> <span class="kw">not</span> gasto_ok:</span>
+<span id="cb29-50"><a href="#cb29-50" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">"⚠️ Conversão positiva e confiável, mas impacto financeiro incerto. Teste complementar recomendado."</span></span>
+<span id="cb29-51"><a href="#cb29-51" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> amostra_ok <span class="kw">and</span> <span class="kw">not</span> conversao_ok <span class="kw">and</span> gasto_ok:</span>
+<span id="cb29-52"><a href="#cb29-52" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">"⚠️ Conversão estável, mas há aumento de gasto. Reavaliar se isso é desejável."</span></span>
+<span id="cb29-53"><a href="#cb29-53" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> amostra_ok <span class="kw">and</span> <span class="kw">not</span> conversao_ok <span class="kw">and</span> <span class="kw">not</span> gasto_ok:</span>
+<span id="cb29-54"><a href="#cb29-54" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">"❌ Sem evidências de ganho. Não prosseguir com rollout."</span></span>
+<span id="cb29-55"><a href="#cb29-55" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> <span class="kw">not</span> amostra_ok <span class="kw">and</span> conversao_ok <span class="kw">and</span> gasto_ok:</span>
+<span id="cb29-56"><a href="#cb29-56" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">"⚠️ Indicadores promissores, mas resultados frágeis estatisticamente. Aumentar amostra."</span></span>
+<span id="cb29-57"><a href="#cb29-57" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> <span class="kw">not</span> amostra_ok <span class="kw">and</span> conversao_ok <span class="kw">and</span> <span class="kw">not</span> gasto_ok:</span>
+<span id="cb29-58"><a href="#cb29-58" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">"⚠️ Conversão aparente, mas não confiável. Repetir experimento com mais dados."</span></span>
+<span id="cb29-59"><a href="#cb29-59" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> <span class="kw">not</span> amostra_ok <span class="kw">and</span> <span class="kw">not</span> conversao_ok <span class="kw">and</span> gasto_ok:</span>
+<span id="cb29-60"><a href="#cb29-60" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">"⚠️ Gasto parece maior, mas não confiável. Não tomar decisão ainda."</span></span>
+<span id="cb29-61"><a href="#cb29-61" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> <span class="kw">not</span> amostra_ok <span class="kw">and</span> <span class="kw">not</span> conversao_ok <span class="kw">and</span> <span class="kw">not</span> gasto_ok:</span>
+<span id="cb29-62"><a href="#cb29-62" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">"❌ Nada é significativo e a amostra é fraca. Não prosseguir."</span></span>
+<span id="cb29-63"><a href="#cb29-63" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb29-64"><a href="#cb29-64" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">"⚠️ Cenário não previsto. Revisar avaliação."</span></span>
+<span id="cb29-65"><a href="#cb29-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-66"><a href="#cb29-66" aria-hidden="true" tabindex="-1"></a><span class="co"># Aplicar a função de decisão</span></span>
+<span id="cb29-67"><a href="#cb29-67" aria-hidden="true" tabindex="-1"></a>decisao_experimento <span class="op">=</span> decisao_final(avaliacao_completa)</span>
+<span id="cb29-68"><a href="#cb29-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-69"><a href="#cb29-69" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(avaliacao_completa)</span>
+<span id="cb29-70"><a href="#cb29-70" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(decisao_experimento)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>✅ Conversão melhor e significativa | ✅ Gasto médio maior e significativo | ✅ Incremento financeiro positivo
+✅ Resultados estatisticamente confiáveis. Pode fazer rollout com segurança.</code></pre>
+</div>
+</div>
+</section>
+<section id="tabela-de-avaliação-dos-resultados" class="level3" data-number="4.4.2">
+<h3 data-number="4.4.2" class="anchored" data-anchor-id="tabela-de-avaliação-dos-resultados"><span class="header-section-number">4.4.2</span> <strong>📋</strong>Tabela de avaliação dos resultados</h3>
+<p>Guia para os possíveis resultados que você pode obter!</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Amostra Suficiente</th>
+<th>Conversão Significativa</th>
+<th>Gasto Significativo</th>
+<th>Interpretação Final</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>✅ Sim</td>
+<td>✅ Sim</td>
+<td>✅ Sim</td>
+<td>✅ <strong>Resultados estatisticamente confiáveis. Pode fazer rollout com segurança.</strong></td>
+</tr>
+<tr class="even">
+<td>✅ Sim</td>
+<td>✅ Sim</td>
+<td>❌ Não</td>
+<td>⚠️ Conversão positiva e confiável, mas impacto financeiro incerto. Teste complementar recomendado.</td>
+</tr>
+<tr class="odd">
+<td>✅ Sim</td>
+<td>❌ Não</td>
+<td>✅ Sim</td>
+<td>⚠️ Conversão estável, mas há aumento de gasto. Reavaliar se isso é desejável.</td>
+</tr>
+<tr class="even">
+<td>✅ Sim</td>
+<td>❌ Não</td>
+<td>❌ Não</td>
+<td>❌ Sem evidências de ganho. Não prosseguir com rollout.</td>
+</tr>
+<tr class="odd">
+<td>❌ Não</td>
+<td>✅ Sim</td>
+<td>✅ Sim</td>
+<td>⚠️ Indicadores promissores, mas <strong>resultados frágeis estatisticamente</strong>. Aumentar amostra.</td>
+</tr>
+<tr class="even">
+<td>❌ Não</td>
+<td>✅ Sim</td>
+<td>❌ Não</td>
+<td>⚠️ Conversão aparente, mas <strong>não confiável</strong>. Repetir experimento com mais dados.</td>
+</tr>
+<tr class="odd">
+<td>❌ Não</td>
+<td>❌ Não</td>
+<td>✅ Sim</td>
+<td>⚠️ Gasto parece maior, mas não confiável. Não tomar decisão ainda.</td>
+</tr>
+<tr class="even">
+<td>❌ Não</td>
+<td>❌ Não</td>
+<td>❌ Não</td>
+<td>❌ Nada é significativo e a amostra é fraca. <strong>Não prosseguir.</strong></td>
+</tr>
+</tbody>
+</table>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/GabrielaMacedo\.github\.io\/experimentos\.github\.io\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./03_TamanhoAmostra.html" class="pagination-link" aria-label="🧾 Você define a amostra">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">🧾 Você define a amostra</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./05_DiversosGrupos.html" class="pagination-link" aria-label="👥 Analisando diversos perfis">
+        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">👥 Analisando diversos perfis</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
